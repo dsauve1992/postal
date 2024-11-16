@@ -1,20 +1,22 @@
 import { Id } from './id';
 
-export class DomainEvent {
+export interface DomainEvent {
   key: string;
-  payload: any;
 }
 
 export class DomainEntity<T extends Id> {
   readonly id: T;
   private readonly events: DomainEvent[];
 
-  // Add an event to the entity
+  constructor(id: T) {
+    this.id = id;
+    this.events = [];
+  }
+
   addEvent(event: DomainEvent): void {
     this.events.push(event);
   }
 
-  // Retrieve and clear events (for triggering and resetting)
   getAndClearEvents(): DomainEvent[] {
     const currentEvents = [...this.events];
     this.events.length = 0;

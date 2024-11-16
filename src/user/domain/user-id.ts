@@ -1,5 +1,6 @@
 import { IdGenerator } from '../../lib/domain/id-generator';
 import { Id } from '../../lib/domain/id';
+import { IllegalArgumentError } from '../../lib/domain/error/IllegalArgumentError';
 
 export class UserId extends Id {
   constructor(private readonly value: string) {
@@ -18,7 +19,7 @@ export class UserId extends Id {
     const [prefix, identifier] = value.split('_');
 
     if (prefix !== this.getPrefix() || identifier.trim().length === 0) {
-      throw new Error(`Invalid UserId ${value}`);
+      throw new IllegalArgumentError(`Invalid UserId ${value}`);
     }
 
     return new UserId(identifier);

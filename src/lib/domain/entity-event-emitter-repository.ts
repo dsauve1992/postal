@@ -8,7 +8,6 @@ export abstract class EntityEventEmitterRepository<
 
   async save(entity: T): Promise<void> {
     await this.saveEntity(entity);
-
     const events = entity.getAndClearEvents();
     events.forEach((event) => this.eventEmitter.emit(event.key, event));
   }
