@@ -2,10 +2,17 @@ import { Module } from '@nestjs/common';
 import { Pool } from 'pg';
 import Knex from 'knex';
 import { IntegrationTestService } from './integration-test.service';
+import { AutoCommitUnitOfWork } from '../../unit-of-work/auto-commit-unit-of-work.service';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
+  imports: [EventEmitterModule.forRoot()],
   controllers: [],
   providers: [
+    {
+      provide: 'UNIT_OF_WORK',
+      useClass: AutoCommitUnitOfWork,
+    },
     {
       provide: 'PG_CONNECTION_POOL',
       useValue: new Pool({
@@ -31,6 +38,6 @@ import { IntegrationTestService } from './integration-test.service';
     },
     IntegrationTestService,
   ],
-  exports: [IntegrationTestService],
+  exports: [IntegrationTestService, 'UNIT_OF_WORK'],
 })
 export class IntegrationTestModule {}
